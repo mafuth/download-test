@@ -25,7 +25,7 @@
                             <tr>
                                 <td>Speed</td>
                                 <td id="speed_result">0</td>
-                                <td>Bytes/s</td>
+                                <td>mb/s</td>
                             </tr>
                             <tr>
                                 <td>Time to first Byte</td>
@@ -142,12 +142,7 @@
                             if (done) {
                                 const endTime = performance.now();
                                 downloadSpeed = (receivedLength / (endTime - startTime)) * 1000;
-                                console.log('Download speed:', downloadSpeed.toFixed(2), 'bytes/s');
-                                console.log('Time to first byte:', timeToFirstByte.toFixed(2), 'ms');
-                                console.log('Latency:', latency.toFixed(2), 'ms');
-                                console.log('Jitter:', jitter.toFixed(2), 'ms');
-                                console.log('ICMP latency:', icmpLatency.toFixed(2), 'ms');
-                                console.log('Packet loss:', packetLoss.toFixed(2), '%');
+                                downloadSpeed = downloadSpeed/1024/1024;                     
 
                                 $("#speed_result").html(downloadSpeed.toFixed(2));
                                 $("#ttfb_result").html(timeToFirstByte.toFixed(2));
