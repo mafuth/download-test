@@ -15,6 +15,9 @@
                         <input type="text" class="form-control" id="downloadfileurl" value="https://upload.wikimedia.org/wikipedia/commons/7/75/%22Volumenes_entre_verde%22.jpg">
                         <label for="floatingInput">Download File</label>
                     </div>
+                    <div class="progress">
+                        <div class="progress-bar" role="progressbar" id="testprogress" style="width: 0%;">0%</div>
+                      </div>
                     <button type="button" id="runtestbtn" class="btn btn-success mt-3" onclick="runtest()"><i class="bi bi-play-circle-fill me-2"></i>Run Test</button>
                     <button type="button" id="runingtestbtn" class="btn btn-warning mt-3" style="display:none;">
                         <div class="spinner-border spinner-border-sm me-2" role="status">
@@ -144,25 +147,30 @@
                     const download = () => {
                         reader.read().then(({ done, value }) => {
                             if (done) {
-                                const endTime = performance.now();
-                                downloadSpeed = (receivedLength / (endTime - startTime)) * 1000;
-                                downloadSpeed = downloadSpeed/1024/1024;                     
-
-                                $("#speed_result").html(downloadSpeed.toFixed(2));
-                                $("#ttfb_result").html(timeToFirstByte.toFixed(2));
-                                $("#latency_result").html(latency.toFixed(2));
-                                $("#icmp_latency_result").html(icmpLatency.toFixed(2));
-                                $("#jitter_result").html(jitter.toFixed(2));
-                                $("#packetloss_result").html(packetLoss.toFixed(2));
-
-                                $("#lat_result").html(position.coords.latitude);
-                                $("#long_result").html(position.coords.longitude);
                                 $("#runtestbtn").show();
                                 $("#runingtestbtn").hide();
-
                                 return;
                             }
                             receivedLength += value.length;
+                            let progress = (receivedLength/contentLength)*100;
+                            progress = progress.toFixed(2);
+                            $("#testprogress").attr("style","width:"+progress+"%;");
+                            $("#testprogress").html(progress+"%");
+                            
+                            let endTime = performance.now();
+                            downloadSpeed = (receivedLength / (endTime - startTime)) * 1000;
+                            downloadSpeed = downloadSpeed/1024/1024;                     
+
+                            $("#speed_result").html(downloadSpeed.toFixed(2));
+                            $("#ttfb_result").html(timeToFirstByte.toFixed(2));
+                            $("#latency_result").html(latency.toFixed(2));
+                            $("#icmp_latency_result").html(icmpLatency.toFixed(2));
+                            $("#jitter_result").html(jitter.toFixed(2));
+                            $("#packetloss_result").html(packetLoss.toFixed(2));
+
+                            $("#lat_result").html(position.coords.latitude);
+                            $("#long_result").html(position.coords.longitude);
+
                             download();
                         });
                     };
@@ -172,6 +180,8 @@
                 .catch(error => {
                     console.error(error);
                     alert(error);
+                    $("#runtestbtn").show();
+                    $("#runingtestbtn").hide();
                 });
             }
         </script>
